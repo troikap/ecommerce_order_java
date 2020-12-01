@@ -23,6 +23,7 @@ public class Event {
     private PlaceEvent placeEvent;
 
     private ArticleValidationEvent articleValidationEvent;
+    private PriceArticleValidationEvent priceArticleValidationEvent;
 
     private PaymentEvent payment;
 
@@ -45,6 +46,14 @@ public class Event {
         result.orderId = new ObjectId(orderId);
         result.type = EventType.ARTICLE_VALIDATION;
         result.articleValidationEvent = validationEvent;
+        return result;
+    }
+
+    public static Event newPriceArticleValidation(String orderId, PriceArticleValidationEvent validationEvent) {
+        Event result = new Event();
+        result.orderId = new ObjectId(orderId);
+        result.type = EventType.ARTICLE_VALIDATION;
+        result.priceArticleValidationEvent = validationEvent;
         return result;
     }
 

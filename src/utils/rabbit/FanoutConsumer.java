@@ -74,7 +74,8 @@ public class FanoutConsumer {
 
                                 EventProcessor eventConsumer = listeners.get(event.type);
                                 if (eventConsumer != null) {
-                                    Logger.getLogger("RabbitMQ").log(Level.INFO, "RabbitMQ Consume " + event.type);
+                                    Logger.getLogger("RabbitMQ").log(Level.INFO,
+                                            "RabbitMQ Consume FANOUT " + event.type);
 
                                     eventConsumer.process(event);
                                 }

@@ -1,17 +1,17 @@
 package events.schema;
 
-public class ArticleValidationEvent {
+public class PriceArticleValidationEvent {
     private String articleId;
     private boolean valid;
-    private int stock;
+    private double price;
 
-    public ArticleValidationEvent() {
+    public PriceArticleValidationEvent() {
     }
 
-    public ArticleValidationEvent(String articleId, boolean valid, int stock) {
+    public PriceArticleValidationEvent(String articleId, boolean valid, double price) {
         this.articleId = articleId;
         this.valid = valid;
-        this.stock = stock;
+        this.price = price;
     }
 
     public String getArticleId() {
@@ -22,7 +22,7 @@ public class ArticleValidationEvent {
         return valid;
     }
 
-    public int getStock() {
-        return stock;
+    public double getPrice() {
+        return price;
     }
 }

@@ -29,7 +29,8 @@ public class TopicPublisher {
 
             channel.basicPublish(exchange, topic, null, message.toJson().getBytes());
 
-            Logger.getLogger("RabbitMQ").log(Level.INFO, "RabbitMQ Emit " + message.type);
+            Logger.getLogger("RabbitMQ").log(Level.INFO,
+                    "RabbitMQ Emit publish TopicPublisher (order) " + message.type);
         } catch (Exception e) {
             Logger.getLogger("RabbitMQ").log(Level.SEVERE, "RabbitMQ no se pudo encolar " + message.type, e);
         }

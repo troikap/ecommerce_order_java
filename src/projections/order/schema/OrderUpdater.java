@@ -13,12 +13,12 @@ public interface OrderUpdater {
 
     static OrderUpdater getUpdaterForEvent(EventType type) {
         switch (type) {
-        case PLACE_ORDER:
-            return new PlaceEventUpdater();
-        case ARTICLE_VALIDATION:
-            return new ArticleValidationUpdater();
-        case PAYMENT:
-            return new PaymentUpdater();
+            case PLACE_ORDER:
+                return new PlaceEventUpdater();
+            case ARTICLE_VALIDATION:
+                return new ArticleValidationUpdater();
+            case PAYMENT:
+                return new PaymentUpdater();
         }
         return new VoidEventUpdater();
     }
@@ -47,7 +47,7 @@ public interface OrderUpdater {
                     .filter(a -> a.id.equals(event.getArticleValidationEvent().getArticleId())) //
                     .forEach(a -> {
                         a.valid = event.getArticleValidationEvent().isValid();
-                        a.unitaryPrice = event.getArticleValidationEvent().getPrice();
+                        // a.unitaryPrice = event.getArticleValidationEvent().getPrice();
                         a.validated = true;
                     });
 
@@ -77,7 +77,7 @@ public interface OrderUpdater {
 
             order.payment = payments;
 
-            if(order.getTotalPayment() >= order.getTotalPrice()) {
+            if (order.getTotalPayment() >= order.getTotalPrice()) {
                 order.status = Status.PAYMENT_DEFINED;
             }
         }

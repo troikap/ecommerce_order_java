@@ -28,6 +28,7 @@ public class RabbitController {
         DirectConsumer directConsumer = new DirectConsumer("order", "order");
         directConsumer.addProcessor("place-order", e -> RabbitController.placeOrder(e));
         directConsumer.addProcessor("article-data", e -> RabbitController.articleData(e));
+        directConsumer.addProcessor("price-article-data", e -> RabbitController.priceArticleData(e));
         directConsumer.start();
     }
 
@@ -105,6 +106,21 @@ public class RabbitController {
         }
     }
 
+    public static void priceArticleData(RabbitEvent event) {
+        System.out.println("------ RECIBIENDO PRECIOS ------");
+        System.out.println("------ event ------");
+        System.out.println(event.message.toString());
+
+        NewArticleValidationData articleExist = NewArticleValidationData.fromJson(event.message.toString());
+        try {
+            System.out.println("article exist ------ " + articleExist);
+            EventService.getInstance().placePriceArticleExist(articleExist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+    }
+
     /**
      *
      * @api {topic} order/order-placed Orden Creada
@@ -128,6 +144,7 @@ public class RabbitController {
      *
      */
     public static void sendOrderPlaced(Event event) {
+        System.out.println("******************** EJECUTANDO sendOrderPlaced *********************");
         RabbitEvent eventToSend = new RabbitEvent();
         eventToSend.type = "order-placed";
         eventToSend.exchange = "order";
@@ -137,6 +154,16 @@ public class RabbitController {
                 event.getPlaceEvent().getCartId(), event.getPlaceEvent().getArticles());
 
         TopicPublisher.publish("sell_flow", "order_placed", eventToSend);
+
+        RabbitEvent eventToSendPrecio = new RabbitEvent();
+        eventToSendPrecio.type = "order-placed";
+        eventToSendPrecio.exchange = "order";
+        eventToSendPrecio.queue = "order";
+
+        eventToSendPrecio.message = new OrderPlacedResponse(event.getOrderId().toHexString(),
+                event.getPlaceEvent().getCartId(), event.getPlaceEvent().getArticles());
+
+        TopicPublisher.publish("sell_flow", "order_placed", eventToSendPrecio);
     }
 
     private static class OrderPlacedResponse {

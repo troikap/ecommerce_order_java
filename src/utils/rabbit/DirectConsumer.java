@@ -92,8 +92,9 @@ public class DirectConsumer {
                 Validator.validate(event);
 
                 EventProcessor l = listeners.get(event.type);
-                if(l != null) {
-                    Logger.getLogger("RabbitMQ").log(Level.INFO, "RabbitMQ Consume article-data : " + event.type);
+                if (l != null) {
+                    Logger.getLogger("RabbitMQ").log(Level.INFO,
+                            "RabbitMQ Consume article-data DIRECT : " + event.type);
 
                     l.process(event);
                 }

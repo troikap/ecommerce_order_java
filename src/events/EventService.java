@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import events.schema.ArticleValidationEvent;
+import events.schema.PriceArticleValidationEvent;
 import events.schema.Event;
 import events.schema.NewArticleValidationData;
 import events.schema.NewPlaceData;
@@ -50,7 +51,20 @@ public class EventService {
         EventRepository repository = EventRepository.getInstance();
 
         Event event = Event.newArticleValidation(data.orderId,
-                new ArticleValidationEvent(data.articleId, data.valid, data.stock, data.price));
+                new ArticleValidationEvent(data.articleId, data.valid, data.stock));
+        repository.save(event);
+
+        ProjectionService.getInstance().updateProjections(event);
+        return event;
+    }
+
+    public Event placePriceArticleExist(NewArticleValidationData data) throws ValidationError {
+        Validator.validate(data);
+
+        EventRepository repository = EventRepository.getInstance();
+
+        Event event = Event.newPriceArticleValidation(data.orderId,
+                new PriceArticleValidationEvent(data.articleId, data.valid, data.price));
         repository.save(event);
 
         ProjectionService.getInstance().updateProjections(event);
